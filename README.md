@@ -39,30 +39,31 @@ brokerage pain points:
 ![Architecture Diagram](./docs/architecture-diagram.png)
 
 ## Data Sources
+This overview is a high-level summary of the source files, grouped by the five independent source systems (OLTP, HR DB, Prospect Vendor, Financial Newswire, and Customer Management) they originate from. For a full file-by-file dictionary, see [docs/datasources.md](./docs/datasources.md).
 
-This overview is a high-level summary of the 18 source files, grouped by the five independent systems they originate from. For a full file-by-file dictionary, see [docs/datasources.md](./docs/datasources.md).
-
-1. Human Resources (HR) 
-    - `HR.csv` (7): Employee master list, salaries, and reporting structures.
-2. Marketing & Client Relationship Management (CRM)
-    - `Prospect.csv` (8): Third-party prospect list for marketing campaigns.
-    - `CustomerMgmt.xml` (9): New and updated customer and account actions.
-    - `WatchHistory.txt` (15): User behavior data (which stocks customers are actively watching on the app).
-3. Brokerage & Trading Operations
-    - `Trade.txt` (11): Core trade transaction fact table.
-    - `TradeHistory.txt` (12): Status-change history per trade.
-    - `HoldingHistory.txt` (13): Snapshot of security holdings resulting from trades.
-    - `TradeType.txt` (6) & `StatusType.txt` (3): System lookup codes defining trade behaviors and execution states.
-4. Finance, Treasury & Market Research
-    - `CashTransaction.txt` (14): Cash movement resulting from trades or account activities.
-    - `TaxRate.txt` (4): Tax jurisdictions applied to investment gains.
-    - `DailyMarket.txt` (16): Daily security price and volume snapshot for market data.
-    - `FINWIRE` (10): Financial newswire providing company, security, and financial records.
-    - `Industry.txt` (5): Business sector categorizations used to classify companies.
-5. IT, Data Platform & Audit (Enterprise Shared Services)
-    - `Date.txt` (1) & `Time.txt` (2): Core date and time dimensions for fact table joins.
-    - `BatchDate.txt` (17): Control file marking the "as-of" date for the current batch.
-    - `*_audit.csv` (18): Auto-generated per-table row counts and control totals for load validation.
+1. Customer Management System (Customer Mgmt)
+    - `CustomerMgmt.xml`: Historical snapshot of new and updated customer and account creations.
+    - `Customer.txt` (Incremental): Pipeline delta updates for customer profiles (replaces the XML in subsequent batches).
+    - `Account.txt` (Incremental): Pipeline delta updates for trading accounts (replaces the XML in subsequent batches).
+2. Human Resources Database (HR DB)
+    - `HR.csv`: Employee master list, internal organization hierarchy, and salaries.
+3. Third-Party Marketing Vendor (Prospect List)
+    - `Prospect.csv`: Re-delivered complete prospect lists used to identify and target high-value potential clients.
+4. Financial Newswire (Market Feed)
+    - `FINWIRE`: Semi-structured fixed-width records containing historical corporate directory listings, security specifications, and financial statements.
+    - `DailyMarket.txt`: Daily security market price snapshots (opening, high, low, close) and trading volumes.
+    - `Industry.txt`: Standard sector definitions used to categorize companies.
+5. On-Line Transaction Processing System (OLTP DB)
+    - `Trade.txt`: Core transactional records representing historical and incremental stock trades.
+    - `TradeHistory.txt`: Full state-transition log tracking trades from submission to completion.
+    - `HoldingHistory.txt`: Incremental modifications of security share quantities held in user portfolios.
+    - `CashTransaction.txt`: Register of all deposit, withdrawal, and transaction-related cash adjustments.
+    - `WatchHistory.txt`: User behavior logs containing security watchlist additions and removals.
+    - `TradeType.txt` & `StatusType.txt`: System configuration lookup codes defining trading behaviors and transaction execution states.
+    - `TaxRate.txt`: Government tax rates applied to investment gains.
+    - `Date.txt` & `Time.txt`: Master temporal dimensions used to structure and time-stamp transactions.
+    - `BatchDate.txt`: System control metadata marking the active processing date boundary for incoming data.
+    - `*_audit.csv`: Automatically generated check totals used to validate ingestion pipelines against data loss.
 
 ## How to Run This
 [Not written yet — will document once Phase 2 is stable and repeatable.]
