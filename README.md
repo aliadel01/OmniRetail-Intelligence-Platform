@@ -36,7 +36,7 @@ brokerage pain points:
   shift from batch-only reporting to near-real-time operational visibility.
 
 ## Architecture
-![Architecture Diagram](./docs/architecture-diagram.png)
+![Architecture Diagram](./docs/images/architecture-diagram.png)
 
 ## Data Sources
 This overview is a high-level summary of the source files, grouped by the five independent source systems (OLTP, HR DB, Prospect Vendor, Financial Newswire, and Customer Management) they originate from. For a full file-by-file dictionary, see [docs/datasources.md](./docs/datasources.md).
