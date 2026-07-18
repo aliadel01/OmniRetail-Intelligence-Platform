@@ -1,8 +1,16 @@
 # Brokerage Data Platform
 
-## Status: 🚧 In Progress — Phase 0 of 9
+## Table of Contents
+1. Overview
+    - [What this is](#what-this-is)
+    - [Why TPC-DI](#why-tpc-di)
+    - [Business Framing](#business-framing)
+2. [Architecture](#architecture)
+3. [Data Sources](#data-sources)
+4. [Data Modeling](#data-modeling)
 
-## What this is
+## Overview
+### What this is
 A production-shaped data platform built on the TPC-DI benchmark, run in its
 native brokerage domain (customers, accounts, trades, holdings, financial
 newswire).
@@ -10,7 +18,7 @@ The **goal** is to demonstrate **real multi-source integration**, **data quality
 engineering, **batch** processing, and **warehouse** design
 at meaningful scale.
 
-## Why TPC-DI
+### Why TPC-DI
 TPC-DI is the only widely-used benchmark purpose-built to simulate real
 data integration pain: **18 source files** across **5 independent systems** that these five systems know **nothing** about each other, in
 **3 genuinely different formats** (CSV, XML, fixed-width-no-delimiter), with
@@ -18,7 +26,7 @@ documented real **data quality problems** rather than synthetic mess injected af
 It also scales to real "**big data**" volume (1GB → 2TB+ via scale factor) and
 ships with an **incremental/streaming** variant.
 
-## Business Framing
+### Business Framing
 This project stays in TPC-DI's native domain — a brokerage firm managing
 customer accounts, trades, holdings, and market data. The operational story mirrors real
 brokerage pain points:
@@ -39,7 +47,7 @@ brokerage pain points:
 ![Architecture Diagram](./docs/images/architecture-diagram.png)
 
 ## Data Sources
-This overview is a high-level summary of the source files, grouped by the five independent source systems (OLTP, HR DB, Prospect Vendor, Financial Newswire, and Customer Management) they originate from. For a full file-by-file dictionary, see [docs/datasources.md](./docs/datasources.md).
+This overview is a high-level summary of the source files, grouped by the five independent source systems (OLTP, HR DB, Prospect Vendor, Financial Newswire, and Customer Management) they originate from. For a full file-by-file dictionary, see [docs/01_datasources.md](./docs/01_datasources.md).
 
 1. Customer Management System (Customer Mgmt)
     - `CustomerMgmt.xml`: Historical snapshot of new and updated customer and account creations.
@@ -65,15 +73,23 @@ This overview is a high-level summary of the source files, grouped by the five i
     - `BatchDate.txt`: System control metadata marking the active processing date boundary for incoming data.
     - `*_audit.csv`: Automatically generated check totals used to validate ingestion pipelines against data loss.
 
+## Data Modeling
+Our brokerage data platform is architected around a robust Star Schema designed for ClickHouse, adhering to the TPC-DI specification. 
+
+**Key highlights of our modeling approach include:**
+*   **Methodology:** Strict adherence to Kimball dimensional modeling principles.
+*   **Schema Design:** Comprehensive Star Schema with optimized dimensions (e.g., `dim_customer` with SCD Type 2) and scalable fact tables.
+*   **Architecture Decisions:** We have documented 9 core Architecture Decision Records (ADRs) covering trade-offs such as surrogate key implementation, outrigger dimensions, and ETL lineage.
+
+👉 **[View the full Data Modeling & ADR Documentation](./docs/02_modeling.md)**
+
 ## How to Run This
 [Not written yet — will document once Phase 2 is stable and repeatable.]
 
 ## Documentation
-- Architecture Decision Records (`./docs/adr/`)
-- Data Dictionary (`./docs/data-dictionary.md`)
-- Data Quality Report (`./docs/dq-report.md`)
+- Data Sources (`./docs/01_datasources.md`)
+- Data Modeling & ADRs (`./docs/02_modeling.md`)
 - Runbook (`./docs/runbook.md`)
-- Case Study (`./docs/case-study.md`)
-- Incident Notes (`./docs/incident-notes.md`)
+
 
 ## Tech Stack
