@@ -1,0 +1,19 @@
+version: "3"
+services:
+  scheduler:
+    volumes:
+      - ./dbt_project:/usr/local/airflow/dbt/dbt_project:rw
+      - ./scripts:/usr/local/airflow/scripts:rw
+      - ./logs:/usr/local/airflow/logs:rw
+
+  webserver:
+    volumes:
+      - ./dbt_project:/usr/local/airflow/dbt/dbt_project:rw
+      - ./scripts:/usr/local/airflow/scripts:rw
+      - ./logs:/usr/local/airflow/logs:rw
+
+  triggerer:
+    volumes:
+      - ./dbt_project:/usr/local/airflow/dbt/dbt_project:rw
+      - ./scripts:/usr/local/airflow/scripts:rw
+      - ./logs:/usr/local/airflow/logs:rw
